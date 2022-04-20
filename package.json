@@ -1,9 +1,8 @@
 {
   "name": "@fcus/ms-identity-nest",
-  "version": "0.1.0",
-  "description": "",
-  "author": "",
-  "private": true,
+  "version": "0.1.1",
+  "description": "A nest.js wrapper for the node.js Microsoft Azure app registration",
+  "author": "Anne Jouke van den Berg",
   "scripts": {
     "build": "nest build",
     "coverage": "c8 ava",
