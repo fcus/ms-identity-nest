@@ -1,4 +1,8 @@
-import * as msal from '@azure/msal-node';
+import {
+    AuthenticationResult,
+    AuthorizationCodeRequest,
+    ConfidentialClientApplication,
+} from '@azure/msal-node';
 import {
     Injectable,
     InternalServerErrorException,
@@ -12,14 +16,14 @@ interface AquireTokenByCodeParams {
 
 @Injectable()
 export class MsIdentityService {
-    private pca: msal.ConfidentialClientApplication;
+    private pca: ConfidentialClientApplication;
 
     constructor(@Optional() private config: MsIdentityConfig) {
         if (!this.config) {
             this.config = new MsIdentityConfig();
         }
 
-        this.pca = new msal.ConfidentialClientApplication({
+        this.pca = new ConfidentialClientApplication({
             auth: {
                 clientId: this.config.clientId,
                 authority: this.config.authority,
@@ -37,8 +41,10 @@ export class MsIdentityService {
         });
     }
 
-    async acquireTokenByCode(params: AquireTokenByCodeParams) {
-        const tokenRequest: msal.AuthorizationCodeRequest = {
+    async acquireTokenByCode(
+        params: AquireTokenByCodeParams,
+    ): Promise<AuthenticationResult> {
+        const tokenRequest: AuthorizationCodeRequest = {
             code: params.requestQueryCode,
             scopes: ['user.read'],
             redirectUri: this.config.redirectUri,
