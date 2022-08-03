@@ -19,26 +19,7 @@ export class MsIdentityService {
     private pca: ConfidentialClientApplication;
 
     constructor(@Optional() private config: MsIdentityConfig) {
-        if (!this.config) {
-            this.config = new MsIdentityConfig();
-        }
-
-        this.pca = new ConfidentialClientApplication({
-            auth: {
-                clientId: this.config.clientId,
-                authority: this.config.authority,
-                clientSecret: this.config.clientSecret,
-            },
-            system: {
-                loggerOptions: {
-                    loggerCallback(loglevel, message, containsPii) {
-                        console.log(message);
-                    },
-                    piiLoggingEnabled: false,
-                    logLevel: this.config.logLevel,
-                },
-            },
-        });
+        this.setup();
     }
 
     async acquireTokenByCode(
@@ -68,5 +49,40 @@ export class MsIdentityService {
         } catch (exception) {
             throw new InternalServerErrorException(exception);
         }
+    }
+
+    private setup() {
+        if (!this.config) {
+            this.config = new MsIdentityConfig();
+        }
+
+        if (
+            !this.config.authority ||
+            !this.config.clientId ||
+            !this.config.clientSecret ||
+            !this.config.redirectUri
+        ) {
+            console.info(
+                'Skipping MS Identity Initialisation, missing one of the configs required: authority, clientId, clientSecret, redirectUri',
+            );
+            return;
+        }
+
+        this.pca = new ConfidentialClientApplication({
+            auth: {
+                clientId: this.config.clientId,
+                authority: this.config.authority,
+                clientSecret: this.config.clientSecret,
+            },
+            system: {
+                loggerOptions: {
+                    loggerCallback(loglevel, message, containsPii) {
+                        console.log(message);
+                    },
+                    piiLoggingEnabled: false,
+                    logLevel: this.config.logLevel,
+                },
+            },
+        });
     }
 }

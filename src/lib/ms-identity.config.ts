@@ -38,19 +38,15 @@ export class MsIdentityConfig {
 
     constructor(params: MsIdentityConfigConstructorParams = {}) {
         this.authority =
-            params?.authority ??
-            process.env.MS_IDENTITY_NEST_AUTHORITY ??
-            'MS_IDENTITY_NEST_AUTHORITY_NOT_SET';
+            params?.authority ?? process.env.MS_IDENTITY_NEST_AUTHORITY ?? null;
 
         this.clientId =
-            params?.clientId ??
-            process.env.MS_IDENTITY_NEST_CLIENT_ID ??
-            'MS_IDENTITY_NEST_CLIENT_ID_NOT_SET';
+            params?.clientId ?? process.env.MS_IDENTITY_NEST_CLIENT_ID ?? null;
 
         this.clientSecret =
             params?.clientSecret ??
             process.env.MS_IDENTITY_NEST_CLIENT_SECRET ??
-            'MS_IDENTITY_NEST_CLIENT_SECRET_NOT_SET';
+            null;
 
         this.loggerCallback =
             params?.loggerCallback ?? this.defaultLoggerCallback;
@@ -61,6 +57,6 @@ export class MsIdentityConfig {
         this.redirectUri =
             params?.redirectUri ??
             process.env.MS_IDENTITY_NEST_REDIRECT_URI ??
-            'MS_IDENTITY_NEST_REDIRECT_URI_NOT_SET';
+            null;
     }
 }
